@@ -6,3 +6,6 @@ Writeup + notes for the THM Reverse_ELF challenge. Messing around with an ELF bi
 - `radare2` 
 - `ghidra`
 
+---
+## 📄 License
+This project is licensed under the [MIT License](LICENSE). 
