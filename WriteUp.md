@@ -7,7 +7,9 @@ An easy start just give permission and run the binary file.
 
 ---
 ## CrackMe2
-![crackme2](screenshots/crackme2.1.png)      ![crackme2](screenshots/crackme2.2.png)
+![crackme2](screenshots/crackme2.1.png)      
+
+![crackme2](screenshots/crackme2.2.png)
 
 Using ```strings``` to diplay readable txt
 
@@ -30,8 +32,9 @@ To run with argument,
 r2 -d ./crackme4 <argument>
 ```
 ### cmds in r2: 
-aaa(to search commands), afl (to search running functions), pdf @<function_name>
-db <address>  (breakpt),  dc (run with breakpt), px @<register> (value in register)
+aaa(to search commands), afl (to search running functions), pdf @<function_name>,
+
+db <Break_address> (breakpt),  dc (run with breakpt), px @<register_name> (value in register)
 
 ![crackme4](screenshots/crackme4.1.png)  ![crackme4](screenshots/crackme4.2.png)
 
