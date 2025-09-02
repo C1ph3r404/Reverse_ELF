@@ -1,89 +1,106 @@
 # 📝 Writeup – Reverse_ELF (TryHackMe)
+
 ---
+
 ## CrackMe1
+
 ![crackme1](screenshots/crackme1.png)
 
-An easy start just give permission and run the binary file.
+Easy start: give permission and run the binary. Simple “hello world” of reversing.
 
 ---
-## CrackMe2
-![crackme2](screenshots/crackme2.1.png)      
 
+## CrackMe2
+
+![crackme2](screenshots/crackme2.1.png)
 ![crackme2](screenshots/crackme2.2.png)
 
-Using ```strings``` to diplay readable txt
+Use `strings` to show readable text in the binary. Sometimes the flag is just sitting there, waving at you.
 
 ---
+
 ## CrackMe3
-![crackme3](screenshots/crackme3.1.png)      ![crackme2](screenshots/crackme3.2.png)
 
-Decoding base64 txt we get flag
+![crackme3](screenshots/crackme3.1.png)
+![crackme3](screenshots/crackme3.2.png)
+
+Binary gives Base64? Decode it. Flag revealed. Easy win.
 
 ---
-## CrackMe4
-Just know basic assembly cmds like MOV, LEA, CMP, ADD, SUB, PUSH, POP, Je, Jmp, Jne, Test. For a list of useful assembly instructions, check out [Assembly Ops](./assembly_ops.md).
 
-Now that we hv that cleared we open radare2
+## CrackMe4
+
+Need basic assembly knowledge: `MOV, LEA, CMP, ADD, SUB, PUSH, POP, JE, JMP, JNE, TEST`. Full list [here](./assembly_ops.md).
+
+Open radare2:
+
 ```bash
 r2 -d crackme4
 ```
-To run with argument,
+
+To run with an argument:
+
 ```bash
 r2 -d ./crackme4 <argument>
 ```
-### cmds in r2: 
-aaa(to search commands), afl (to search running functions), pdf @<function_name>,
 
-db <Break_address> (breakpt),  dc (run with breakpt), px @<register_name> (value in register)
+### Key radare2 commands
 
-![crackme4](screenshots/crackme4.1.png)  ![crackme4](screenshots/crackme4.2.png)
+* `aaa` → analyze everything
+* `afl` → list functions
+* `pdf @<function>` → disassemble/view function
+* `db <address>` → set breakpoint
+* `dc` → continue/run
+* `px @<register>` → inspect register
 
-Run ```aaa``` then ```afl``` to list out all functions. We're always interested in the main function so ``pdf @main``.
-In main we see sym.compare_pwd thats where the input string and passwd will be compared so ```pdf @sym.compare_pwd```.
-Ignoring everything n going straight to call sym.imp.strcmp which is function compare to strings  . It takes two arguments 
-rdi and rsi one of that is our input other will be the compared password. So if u see the value in the register at that instance 
-one should contain the actual passwd. For that we set breakpoint ``db <address`` and run it using ``dc``
+Run `aaa` → `afl` → `pdf @main`. Check `sym.compare_pwd` where input is compared to password. Set breakpoint at `strcmp`, check `rdi`/`rsi` for the real password.
 
+![crackme4](screenshots/crackme4.1.png)
+![crackme4](screenshots/crackme4.2.png)
 ![crackme4](screenshots/crackme4.3.png)
 
 ---
-## CrackMe5
-Same we'll use radare ```r2 -d crackme5```
-```aaa```, ```pdf "main``` Search for function that c0mpare then set breakpt n run with it
-![crackme5](screenshots/crackme5.1.png)    ![crackme5](screenshots/crackme5.2.png)
 
-We can also see that the passwd was infront of us
+## CrackMe5
+
+Same as CrackMe4: find the comparison function, set a breakpoint, inspect, extract password. Sometimes the binary is just nice enough to show it upfront.
+
+![crackme5](screenshots/crackme5.1.png)
+![crackme5](screenshots/crackme5.2.png)
 
 ---
-## CrackMe6
-Same procedure got to main function then see for functions that are sus or are called before a desired outcome(like correct passwd).
-For this its sym.my_secure_test. By looking at the code u can tell that its comparing each character of input with certain characters.
-The value of that is displayed at the side in red by r2.
 
-![crackme6](screenshots/crackme6.1.png) 
+## CrackMe6
+
+Go to `main`, check suspicious functions (`sym.my_secure_test`). Compares input character by character. Registers show red indicators for correct characters in em.
+
+![crackme6](screenshots/crackme6.1.png)
 ![crackme6](screenshots/crackme6.2.png)
 
 ---
+
 ## CrackMe7
-You can run the binary and see how things work im straight up going in r2 -d crackme8, pdf @main.
-Ignoring all the code n going to the part where flag/passwd is decided
 
-![crackme7](screenshots/crackme7.1.png) 
+Input is compared to a hex value (`0x7a69`). Convert to decimal → password. Sometimes reversing is just math in disguise.
 
-The user input is compared to a hex value 0x7a69 converting that into decimal and done
-
+![crackme7](screenshots/crackme7.1.png)
 ![crackme7](screenshots/crackme7.2.png)
 
 ---
+
 ## CrackMe8
-For this we going to use ghidra, which make its super easy and saves a lot of time. After creating a project on ghidra and import crackme8 in it.
-Go to functions main,
+
+Use **Ghidra** here—it’s faster than r2 for reading code.
+
+* Import binary, check `main`.
+* Ghidra makes tracing logic simple.
+* r2 works too, good for practice.
 
 ![crackme8](screenshots/crackme8.png)
 
-You can try with r2 but ghidra just better. r2 is just good for understanding the basics reverse engineering will be useful somewhere....probably -_o
-
 ---
-**NOTE**: Do tell if u find any mistakes....
 
-⚠️ **Disclaimer:** This write-up is for educational purposes only. Do not use these techniques outside legal environments.
+**Note:** Basics first, advanced later. Strings + Base64 + Radare2 + Ghidra covers most challenges here.
+
+⚠️ **Disclaimer:** Only try this on legal labs or CTFs.
+
