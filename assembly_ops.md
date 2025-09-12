@@ -2,6 +2,32 @@
 
 Here’s a quick rundown of the usual suspects you’ll see when reversing binaries:
 
+On x86-64 (a.k.a. AMD64), you’ve got **16 general-purpose 64-bit registers** 👇
+
+```
+RAX  RBX  RCX  RDX
+RSI  RDI  RBP  RSP
+R8   R9   R10  R11
+R12  R13  R14  R15
+```
+
+---
+
+📝 Quick breakdown:
+
+* **RAX, RBX, RCX, RDX** → classic ones (used since 16-bit days).
+* **RSI, RDI, RBP, RSP** → for source/dest indexes, base/frame pointer, stack pointer.
+* **R8–R15** → added when 64-bit mode came in (extra breathing room).
+
+Each has "sub-registers":
+
+* 64-bit: `RAX`
+* 32-bit: `EAX`
+* 16-bit: `AX`
+* 8-bit: `AL` (low) and `AH` (high, for the old ones only)
+
+⚡ For `R8–R15`, you get `R8D` (32-bit), `R8W` (16-bit), `R8B` (8-bit). No AH/BH/CH/DH mess there.
+
 ### 📝 Data Movement
 - `mov dst, src` → copy value from src → dst  
 - `lea dst, [mem]` → load effective address (basically gives pointer, not value)  
