@@ -11,8 +11,6 @@ R8   R9   R10  R11
 R12  R13  R14  R15
 ```
 
----
-
 📝 Quick breakdown:
 
 * **RAX, RBX, RCX, RDX** → classic ones (used since 16-bit days).
@@ -27,6 +25,38 @@ Each has "sub-registers":
 * 8-bit: `AL` (low) and `AH` (high, for the old ones only)
 
 ⚡ For `R8–R15`, you get `R8D` (32-bit), `R8W` (16-bit), `R8B` (8-bit). No AH/BH/CH/DH mess there.
+
+### 📦 Size keywords
+
+* **`byte`** → 8 bits (1 byte)
+* **`word`** → 16 bits (2 bytes)
+* **`dword`** → 32 bits (4 bytes) → "double word"
+* **`qword`** → 64 bits (8 bytes) → "quad word"
+
+🔥 Examples
+
+```asm
+mov byte [rax], 0x41     ; put 'A' (1 byte) into memory at RAX
+mov word [rax], 0x4241   ; put 0x4142 (2 bytes) into memory
+mov dword [rax], 0x434241 ; put 0x41424344 (4 bytes)
+mov qword [rax], rbx     ; copy full 8 bytes from RBX into memory at RAX
+```
+
+If the size is **clear from registers**, you don’t need the keyword:
+
+```asm
+mov eax, 0x12345678    ; assembler knows eax is 32-bit → dword
+mov rax, rcx           ; both 64-bit → qword
+```
+
+But if moving **into memory**, you often have to **specify size**:
+
+```asm
+mov [rax], bl      ; assembler knows bl is 1 byte
+mov [rax], eax     ; assembler knows eax is 4 bytes
+mov [rax], 1       ; ❌ ambiguous → assembler doesn’t know size  
+mov byte [rax], 1  ; ✅ now it knows
+```
 
 ### 📝 Data Movement
 - `mov dst, src` → copy value from src → dst  
